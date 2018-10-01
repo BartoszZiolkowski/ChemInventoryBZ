@@ -92,7 +92,7 @@ class AddUser(View):
                                              email=form.cleaned_data['email'])
 
 
-                    return redirect('/home')
+                    return redirect('/')
 
                 else:
                     return render(request, 'add_user.html', {'form': form,
@@ -130,7 +130,7 @@ class ChangeUserDataView(View):
                 user.save()
 
 
-                return redirect('/home')
+                return redirect('/')
             else:
                 return render(request, 'change_user_data.html', {'form': form,
                                                                 'error': 'password not the same',
@@ -194,7 +194,6 @@ class AddSample(View):
 
             filename = f'inventory/static/img/{sample_code}'
             database_filename = f'img/{sample_code}.svg'
-            print(filename)
 
             barcode = generate('code128', sample_code, output=filename)
 
@@ -215,16 +214,7 @@ class AddSample(View):
 
         return render(request, 'add_sample.html', {'form': form,
                                                  'message': 'coś nie tak w formularzu'})
-"""
-class UpdateSample(View):
 
-    def get(self, request, pk):
-        sample = Sample.objects.get(pk=pk)
-        form = UpdateSampleForm(instance=sample)
-        return render(request, 'sample_update_form.html', {'form':form})
-
-
-"""
 class UpdateSample(UpdateView):
     model = Sample
     fields = ['name', 'supplier', 'amount', 'mass', 'MSDS', 'TDS', 'location', 'date_received', 'photo' ]
@@ -236,14 +226,6 @@ class UpdateSample(UpdateView):
 class DeleteSample(DeleteView):
     model = Sample
     success_url = '/samples_list'
-
-"""
-class AddSample(CreateView):
-    model = Sample
-    fields = '__all__'
-    success_url = '/home'
-"""
-
 
 
 
@@ -291,7 +273,8 @@ class ViewSamples(View):
                 return render(request, 'samples_list.html', {'samples': result,
                                                                'message': message,
                                                                'form': form})
-
+            except IndexError as e:
+                return redirect()
             except Exception as e:
                 return HttpResponse(e)
         return HttpResponse('form not valid')
@@ -307,7 +290,7 @@ class ViewSamplePhoto(View):
             return render(request, 'sample_photo.html', {'message':message})
 class ViewSampleBarcode(View):
     def get(self, request, pk):
-
+/
         barcode = Sample.objects.get(pk=pk)
         try:
             return render(request, 'barcode.html', {'file':barcode})

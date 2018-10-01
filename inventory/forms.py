@@ -65,6 +65,7 @@ class UpdateSampleForm(forms.ModelForm):
     date_received = forms.DateField(default=date.today, verbose_name='data przyjęcia')
 """
 
+
 class AddSampleForm(forms.ModelForm):
     class Meta:
         model = Sample
@@ -72,7 +73,7 @@ class AddSampleForm(forms.ModelForm):
         exclude = ['sample_code', 'user', 'barcode']
 
 class SearchForm(forms.Form):
-    search_term = forms.CharField(label='', max_length=200)
+    search_term = forms.CharField(label='', max_length=200, required=False)
 
 
 """
